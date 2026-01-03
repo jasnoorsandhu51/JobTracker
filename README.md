@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# JobTracker
+
+A modern job application tracking system built with Next.js, Supabase, and TailwindCSS. Keep your job search organized with real-time tracking, statistics, and an intuitive interface.
+
+## Features
+
+- **Application Management** - Track applications with company, position, status, dates, and notes
+- **Real-time Statistics** - Interactive pie chart visualizing application status distribution
+- **Custom Columns** - Add and reorder custom fields to match your workflow
+- **Auto-save** - Inline editing with automatic debounced saves
+- **Authentication** - Secure user accounts with Supabase Auth
+- **Animated UI** - Purple-themed gradient background with floating particles and mouse interactions
+- **Motivational Quotes** - Daily rotating quotes at the footer to keep you motivated
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router, React 19, TypeScript)
+- **Database:** Supabase (PostgreSQL with Row Level Security)
+- **Styling:** TailwindCSS 4 with custom gradients and animations
+- **Tables:** TanStack Table for advanced table functionality
+- **Fonts:** Rubik (300-900 weights) via next/font/google
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+
+- Supabase account and project
+- Environment variables:
+  ```env
+  NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your_anon_key
+  ```
+
+### Installation
 
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+app/
+├── dashboard/           # Main application dashboard
+│   ├── JobTrackerTable.tsx    # Core table with stats
+│   ├── GradientBackground.tsx # Animated background
+│   ├── QuoteFooter.tsx        # Motivational quotes
+│   └── actions.ts             # Server actions (CRUD)
+├── login/               # Authentication pages
+├── signup/
+├── lib/supabase/        # Supabase client config
+└── globals.css          # Global styles & custom scrollbar
+```
 
-## Learn More
+## Database Schema
 
-To learn more about Next.js, take a look at the following resources:
+**applications** table:
+- `id` (uuid, primary key)
+- `user_id` (uuid, foreign key to auth.users)
+- `company` (text)
+- `role` (text)
+- `status` (text) - Applied, Interview, Offer, Rejected
+- `applied_at` (date)
+- `notes` (text)
+- `custom_fields` (jsonb) - Flexible storage for custom columns
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Key Features Explained
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Auto-save System
+Uses debounced saves (1.5s delay) with optimistic UI updates. Status indicator shows "Saving..." → "Saved" transitions.
 
-## Deploy on Vercel
+### Statistics View
+Real-time pie chart calculates status distribution using SVG circles with `strokeDasharray`. Hover effects highlight segments and legend.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Custom Columns
+Drag-to-reorder interface stores column configuration. Data persists in `custom_fields` JSONB column.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Animated Background
+Purple gradient spheres with CSS keyframe animations, JavaScript particle system (80 ambient + mouse-triggered), parallax mouse tracking, grid overlay, and noise texture.
+
+## Deployment
+
+Deploy to Vercel with automatic environment variable detection:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+Ensure Supabase environment variables are configured in project settings.
+
+## License
+
+MIT

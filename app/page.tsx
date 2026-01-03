@@ -1,65 +1,118 @@
-import Image from "next/image";
+import Link from "next/link";
+import GradientBackground from "./dashboard/GradientBackground";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-black text-white relative">
+      {/* Gradient Background */}
+      <GradientBackground />
+
+      {/* Header */}
+      <header className="fixed top-0 w-full z-50 border-b border-white/10 bg-black/80 backdrop-blur-lg">
+        <nav className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between relative">
+          <div className="text-xl font-bold">
+            Job<span className="text-purple-500">Tracker</span>
+          </div>
+          <div className="flex gap-6 items-center">
+            <Link
+              href="/login"
+              className="text-sm text-gray-400 hover:text-white transition-colors"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Sign in
+            </Link>
+            <Link
+              href="/signup"
+              className="text-sm bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+              Sign up
+            </Link>
+          </div>
+        </nav>
+      </header>
+
+      {/* Hero Section */}
+      <main className="pt-32 pb-20 px-6 relative z-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="text-center max-w-4xl mx-auto">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm mb-8">
+              <span className="w-2 h-2 rounded-full bg-purple-500"></span>
+              Track your career journey
+            </div>
+
+            {/* Headline */}
+            <h1 className="text-6xl md:text-7xl font-bold tracking-tight mb-6">
+              Your job search,
+              <br />
+              <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
+                simplified
+              </span>
+            </h1>
+
+            {/* Subheadline */}
+            <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+              Stay organized and in control. Track applications, manage interviews,
+              and land your dream job with ease.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex justify-center">
+              <Link
+                href="/login"
+                className="px-8 py-4 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition-all hover:scale-105"
+              >
+                Start tracking for free
+              </Link>
+            </div>
+          </div>
+
+          {/* Features Grid */}
+          <div className="mt-32 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="p-6 rounded-2xl bg-gradient-to-b from-white/5 to-transparent border border-white/10">
+              <div className="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Track Applications</h3>
+              <p className="text-gray-400">
+                Keep all your job applications organized in one place
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-gradient-to-b from-white/5 to-transparent border border-white/10">
+              <div className="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Manage Interviews</h3>
+              <p className="text-gray-400">
+                Never miss an interview with smart reminders
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-gradient-to-b from-white/5 to-transparent border border-white/10">
+              <div className="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Track Progress</h3>
+              <p className="text-gray-400">
+                Visualize your job search journey with insights
+              </p>
+            </div>
+          </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-white/10 py-8 px-6 mt-20">
+        <div className="mx-auto max-w-7xl text-center text-gray-500 text-sm">
+          © 2026 JobTracker. All rights reserved.
+        </div>
+      </footer>
     </div>
   );
 }
