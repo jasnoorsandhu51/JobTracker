@@ -1,3 +1,61 @@
+@font-face {
+  font-family: 'Inconsolata';
+  src: url('https://ggayane.github.io/css-experiments/Inconsolata-VF.ttf');
+  font-weight: 275 900;
+  font-stretch: 50% 200%;
+}
+
+.headline-main {
+  white-space: nowrap;
+  font-family: 'Inconsolata', monospace;
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: white;
+}
+
+.static {
+  font-size: 30px;
+  font-variation-settings: "wght" 900, "wdth" 200;
+}
+
+.variable {
+  display: flex;
+  font-variation-settings: "wght" 275, "wdth" 50;
+  text-align: center;
+  animation: swapthings 3s infinite both cubic-bezier(0.17, 0.04, 0.04, 0.99);
+}
+
+.work {
+  animation: swapthings2 3s infinite both cubic-bezier(0.17, 0.04, 0.04, 0.99);
+}
+
+@keyframes swapthings {
+  0% {
+    font-variation-settings: "wght" 275, "wdth" 50;
+  }
+
+  50% {
+    font-variation-settings: "wght" 900, "wdth" 200;
+  }
+
+  100% {
+    font-variation-settings: "wght" 275, "wdth" 50;
+  }
+}
+
+@keyframes swapthings2 {
+  0% {
+    font-variation-settings: "wght" 900, "wdth" 200;
+  }
+
+  50% {
+    font-variation-settings: "wght" 275, "wdth" 50;
+  }
+
+  100% {
+    font-variation-settings: "wght" 900, "wdth" 200;
+  }
+}
+
 @import "tailwindcss";
 
 :root {

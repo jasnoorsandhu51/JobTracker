@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import GradientBackground from "./dashboard/GradientBackground";
 
@@ -56,7 +58,8 @@ export default function Home() {
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex justify-center">
+
+            <div className="flex justify-center mb-16">
               <Link
                 href="/login"
                 className="px-8 py-4 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition-all hover:scale-105"
@@ -64,6 +67,27 @@ export default function Home() {
                 Start tracking for free
               </Link>
             </div>
+
+            {/* Dashboard Screenshot */}
+            <div className="mt-16 mb-12">
+              <div className="relative max-w-5xl mx-auto">
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-purple-600/20 blur-3xl rounded-3xl"></div>
+                {/* Screenshot container */}
+                <div className="relative rounded-2xl overflow-hidden border border-purple-500/30 shadow-2xl">
+                  <img
+                    src="/Screen_dash.png"
+                    alt="JobTracker Dashboard"
+                    className="w-full h-auto"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Tagline */}
+            <p className="text-center text-gray-500 text-sm mb-8 italic">
+              Built by a student who got tired of spreadsheets
+            </p>
           </div>
 
           {/* Features Grid */}
@@ -74,9 +98,9 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Track Applications</h3>
+              <h3 className="text-xl font-semibold mb-2">Never Lose Track of an Application</h3>
               <p className="text-gray-400">
-                Keep all your job applications organized in one place
+                Every company, role, status, and note—always in sync.
               </p>
             </div>
 
@@ -86,9 +110,9 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Manage Interviews</h3>
+              <h3 className="text-xl font-semibold mb-2">Interviews, Without the Chaos</h3>
               <p className="text-gray-400">
-                Never miss an interview with smart reminders
+                Set reminders so nothing slips through the cracks.
               </p>
             </div>
 
@@ -98,9 +122,9 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Track Progress</h3>
+              <h3 className="text-xl font-semibold mb-2">See Momentum, Not Guesswork</h3>
               <p className="text-gray-400">
-                Visualize your job search journey with insights
+                Visual insights into where your search actually stands.
               </p>
             </div>
           </div>

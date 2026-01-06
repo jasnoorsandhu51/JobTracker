@@ -761,218 +761,230 @@ export default function JobTrackerTable({ userId }: { userId: string }) {
             </div>
 
             {activeTab === 'applications' ? (
+
                 <div className="rounded-lg border border-white/10 bg-gradient-to-b from-white/5 to-transparent overflow-hidden">
-                    {apps.length === 0 ? (
-                        <div className="text-center py-12 text-gray-500">
-                            <p>No applications yet. Start by adding one above!</p>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="overflow-x-auto">
-                                <table className="w-full table-fixed">
-                                    <thead className="bg-white/5 border-b border-white/10">
-                                        <tr>
-                                            {table.getHeaderGroups().map((headerGroup) =>
-                                                headerGroup.headers.map((header) => (
-                                                    <th
-                                                        key={header.id}
-                                                        className="px-4 py-3 text-left text-sm font-medium text-gray-300"
-                                                        style={{
-                                                            width: header.id === 'company' ? '200px' :
-                                                                header.id === 'role' ? '200px' :
-                                                                    header.id === 'status' ? '150px' :
-                                                                        header.id === 'applied_at' ? '140px' :
-                                                                            header.id === 'notes' ? '200px' : '200px'
+                    <div className="overflow-x-auto">
+                        <table className="w-full table-fixed">
+                            <thead className="bg-white/5 border-b border-white/10">
+                                <tr>
+                                    {table.getHeaderGroups().map((headerGroup) =>
+                                        headerGroup.headers.map((header, idx, arr) => (
+                                            <th
+                                                key={header.id}
+                                                className="px-4 py-3 text-left text-sm font-medium text-gray-300"
+                                                style={{
+                                                    width: header.id === 'company' ? '200px' :
+                                                        header.id === 'role' ? '200px' :
+                                                            header.id === 'status' ? '150px' :
+                                                                header.id === 'applied_at' ? '140px' :
+                                                                    header.id === 'notes' ? '200px' : '200px'
+                                                }}
+                                            >
+                                                {flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                            </th>
+                                        ))
+                                    )}
+                                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-300 w-24 relative">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {/* Existing Rows */}
+                                {apps.length === 0 && !showNewRow && (
+                                    <tr>
+                                        <td colSpan={table.getAllLeafColumns().length + 1} className="text-center py-12 text-gray-500">
+                                            <p>No applications yet. Start by adding one above!</p>
+                                        </td>
+                                    </tr>
+                                )}
+                                {table.getRowModel().rows.map((row) => (
+                                    <tr
+                                        key={row.id}
+                                        className="border-b border-white/5 hover:bg-white/5 focus-within:border-purple-500/50 focus-within:border-2 transition-all"
+                                    >
+                                        {row.getVisibleCells().map((cell, idx, arr) => {
+                                            const isNotesColumn = cell.column.id === 'notes'
+                                            const noteValue = isNotesColumn ? row.original.notes : null
+                                            const columnId = cell.column.id
+                                            const isCustomColumn = !['company', 'role', 'status', 'applied_at', 'notes'].includes(columnId)
+                                            const currentValue = editingData[row.original.id!]?.[columnId as keyof Application] ??
+                                                (isCustomColumn ? row.original.custom_fields?.[columnId] : row.original[columnId as keyof Application])
+
+                                            // Notes column - click to expand
+                                            if (isNotesColumn) {
+                                                return (
+                                                    <td
+                                                        key={cell.id}
+                                                        className="px-4 py-3 text-sm text-gray-300 truncate cursor-pointer hover:text-purple-400"
+                                                        onClick={() => {
+                                                            if (noteValue && row.original.id) {
+                                                                setExpandedNotes({
+                                                                    id: row.original.id,
+                                                                    company: row.original.company,
+                                                                    role: row.original.role,
+                                                                    notes: noteValue
+                                                                })
+                                                                setIsEditingNotes(false)
+                                                                setEditedNotes('')
+                                                            }
                                                         }}
                                                     >
-                                                        {flexRender(
-                                                            header.column.columnDef.header,
-                                                            header.getContext()
-                                                        )}
-                                                    </th>
-                                                ))
-                                            )}
-                                            <th className="px-4 py-3 text-left text-sm font-medium text-gray-300 w-24">
-                                                Actions
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {/* Existing Rows */}
-                                        {table.getRowModel().rows.map((row) => (
-                                            <tr
-                                                key={row.id}
-                                                className="border-b border-white/5 hover:bg-white/5 focus-within:border-purple-500/50 focus-within:border-2 transition-all"
-                                            >
-                                                {row.getVisibleCells().map((cell) => {
-                                                    const isNotesColumn = cell.column.id === 'notes'
-                                                    const noteValue = isNotesColumn ? row.original.notes : null
-                                                    const columnId = cell.column.id
-                                                    const isCustomColumn = !['company', 'role', 'status', 'applied_at', 'notes'].includes(columnId)
-                                                    const currentValue = editingData[row.original.id!]?.[columnId as keyof Application] ??
-                                                        (isCustomColumn ? row.original.custom_fields?.[columnId] : row.original[columnId as keyof Application])
+                                                        {noteValue}
+                                                    </td>
+                                                )
+                                            }
 
-                                                    // Notes column - click to expand
-                                                    if (isNotesColumn) {
-                                                        return (
-                                                            <td
-                                                                key={cell.id}
-                                                                className="px-4 py-3 text-sm text-gray-300 truncate cursor-pointer hover:text-purple-400"
-                                                                onClick={() => {
-                                                                    if (noteValue && row.original.id) {
-                                                                        setExpandedNotes({
-                                                                            id: row.original.id,
-                                                                            company: row.original.company,
-                                                                            role: row.original.role,
-                                                                            notes: noteValue
-                                                                        })
-                                                                        setIsEditingNotes(false)
-                                                                        setEditedNotes('')
-                                                                    }
-                                                                }}
-                                                            >
-                                                                {noteValue}
-                                                            </td>
-                                                        )
-                                                    }
-
-                                                    // Editable cells
-                                                    return (
-                                                        <td key={cell.id} className={`px-4 py-3 ${columnId === 'applied_at' ? '' : 'w-48'
-                                                            }`}>
-                                                            {columnId === 'status' ? (
-                                                                <StatusBadge
-                                                                    status={currentValue as string}
-                                                                    rowId={row.original.id!}
-                                                                    onChange={(value) => handleCellEdit(row.original.id!, 'status', value)}
-                                                                />
-                                                            ) : columnId === 'applied_at' ? (
-                                                                <input
-                                                                    type="date"
-                                                                    value={currentValue as string}
-                                                                    onChange={(e) => handleCellEdit(row.original.id!, 'applied_at', e.target.value)}
-                                                                    className="w-full bg-transparent border-none outline-none text-sm text-gray-300 focus:text-white"
-                                                                />
-                                                            ) : isCustomColumn ? (
-                                                                <input
-                                                                    type="text"
-                                                                    value={currentValue as string || ''}
-                                                                    onChange={(e) => handleCustomFieldEdit(row.original.id!, columnId, e.target.value)}
-                                                                    className="w-full bg-transparent border-none outline-none text-sm text-gray-300 focus:text-white truncate"
-                                                                />
-                                                            ) : (
-                                                                <input
-                                                                    type="text"
-                                                                    value={currentValue as string}
-                                                                    onChange={(e) => handleCellEdit(row.original.id!, columnId as keyof Application, e.target.value)}
-                                                                    className="w-full bg-transparent border-none outline-none text-sm text-gray-300 focus:text-white truncate"
-                                                                />
-                                                            )}
-                                                        </td>
-                                                    )
-                                                })}
-                                                <td className="px-4 py-3">
-                                                    <button
-                                                        onClick={() => handleDelete(row.original.id!)}
-                                                        className="text-red-400 hover:text-red-300 transition-colors"
-                                                        title="Delete"
-                                                    >
-                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                        </svg>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-
-                                        {/* New Row */}
-                                        {showNewRow && (
-                                            <tr className="border-b border-white/5 bg-purple-500/5 focus-within:border-purple-500 focus-within:border-2 transition-all">
-                                                <td className="px-4 py-3">
-                                                    <input
-                                                        type="text"
-                                                        value={newRow.company}
-                                                        onChange={(e) =>
-                                                            setNewRow({ ...newRow, company: e.target.value })
-                                                        }
-                                                        placeholder="Company name"
-                                                        className="w-full bg-transparent border-none outline-none text-sm text-white placeholder-gray-500"
-                                                    />
-                                                </td>
-                                                <td className="px-4 py-3">
-                                                    <input
-                                                        type="text"
-                                                        value={newRow.role}
-                                                        onChange={(e) =>
-                                                            setNewRow({ ...newRow, role: e.target.value })
-                                                        }
-                                                        placeholder="Position"
-                                                        className="w-full bg-transparent border-none outline-none text-sm text-white placeholder-gray-500"
-                                                    />
-                                                </td>
-                                                <td className="px-4 py-3">
-                                                    <StatusBadge
-                                                        status={newRow.status}
-                                                        rowId="new-row"
-                                                        onChange={(value) => setNewRow({ ...newRow, status: value })}
-                                                    />
-                                                </td>
-                                                <td className="px-4 py-3">
-                                                    <input
-                                                        type="date"
-                                                        value={newRow.applied_at}
-                                                        onChange={(e) =>
-                                                            setNewRow({ ...newRow, applied_at: e.target.value })
-                                                        }
-                                                        className="w-full bg-transparent border-none outline-none text-sm text-white"
-                                                    />
-                                                </td>
-                                                <td className="px-4 py-3">
-                                                    <input
-                                                        type="text"
-                                                        value={newRow.notes}
-                                                        onChange={(e) =>
-                                                            setNewRow({ ...newRow, notes: e.target.value })
-                                                        }
-                                                        placeholder="Notes"
-                                                        className="w-full bg-transparent border-none outline-none text-sm text-white placeholder-gray-500 truncate"
-                                                    />
-                                                </td>
-                                                {/* Custom Column Inputs */}
-                                                {customColumns.map((col) => (
-                                                    <td key={col.id} className="px-4 py-3">
+                                            // Editable cells
+                                            return (
+                                                <td key={cell.id} className={`px-4 py-3 ${columnId === 'applied_at' ? '' : 'w-48'}`}
+                                                >
+                                                    {columnId === 'status' ? (
+                                                        <StatusBadge
+                                                            status={currentValue as string}
+                                                            rowId={row.original.id!}
+                                                            onChange={(value) => handleCellEdit(row.original.id!, 'status', value)}
+                                                        />
+                                                    ) : columnId === 'applied_at' ? (
+                                                        <input
+                                                            type="date"
+                                                            value={currentValue as string}
+                                                            onChange={(e) => handleCellEdit(row.original.id!, 'applied_at', e.target.value)}
+                                                            className="w-full bg-transparent border-none outline-none text-sm text-gray-300 focus:text-white"
+                                                        />
+                                                    ) : isCustomColumn ? (
                                                         <input
                                                             type="text"
-                                                            value={newRow.custom_fields?.[col.id] || ''}
-                                                            onChange={(e) =>
-                                                                setNewRow({
-                                                                    ...newRow,
-                                                                    custom_fields: {
-                                                                        ...newRow.custom_fields,
-                                                                        [col.id]: e.target.value
-                                                                    }
-                                                                })
-                                                            }
-                                                            placeholder={col.name}
-                                                            className="w-full bg-transparent border-none outline-none text-sm text-white placeholder-gray-500 truncate"
+                                                            value={currentValue as string || ''}
+                                                            onChange={(e) => handleCustomFieldEdit(row.original.id!, columnId, e.target.value)}
+                                                            className="w-full bg-transparent border-none outline-none text-sm text-gray-300 focus:text-white truncate"
                                                         />
-                                                    </td>
-                                                ))}
-                                                <td className="px-4 py-3">
-                                                    <button
-                                                        onClick={handleSaveNew}
-                                                        className="text-xs bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded transition-colors"
-                                                    >
-                                                        Save
-                                                    </button>
+                                                    ) : (
+                                                        <input
+                                                            type="text"
+                                                            value={currentValue as string}
+                                                            onChange={(e) => handleCellEdit(row.original.id!, columnId as keyof Application, e.target.value)}
+                                                            className="w-full bg-transparent border-none outline-none text-sm text-gray-300 focus:text-white truncate"
+                                                        />
+                                                    )}
+                                                    {idx < arr.length - 1 && (
+                                                        <span className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-700/40 select-none pointer-events-none">|</span>
+                                                    )}
                                                 </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </>
-                    )}
+                                            )
+                                        })}
+                                        <td className="px-4 py-3">
+                                            <button
+                                                onClick={() => handleDelete(row.original.id!)}
+                                                className="text-red-400 hover:text-red-300 transition-colors"
+                                                title="Delete"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+
+                                {/* New Row */}
+                                {showNewRow && (
+                                    <tr className="border-b border-white/5 bg-purple-500/5 focus-within:border-purple-500 focus-within:border-2 transition-all relative">
+                                        <td className="px-4 py-3 relative">
+                                            <input
+                                                type="text"
+                                                value={newRow.company}
+                                                onChange={(e) =>
+                                                    setNewRow({ ...newRow, company: e.target.value })
+                                                }
+                                                placeholder="Company name"
+                                                className="w-full bg-transparent border-none outline-none text-sm text-white placeholder-gray-500"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-3 relative">
+                                            <input
+                                                type="text"
+                                                value={newRow.role}
+                                                onChange={(e) =>
+                                                    setNewRow({ ...newRow, role: e.target.value })
+                                                }
+                                                placeholder="Position"
+                                                className="w-full bg-transparent border-none outline-none text-sm text-white placeholder-gray-500"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-3 relative">
+                                            <StatusBadge
+                                                status={newRow.status}
+                                                rowId="new-row"
+                                                onChange={(value) => setNewRow({ ...newRow, status: value })}
+                                            />
+                                        </td>
+                                        <td className="px-4 py-3 relative">
+                                            <input
+                                                type="date"
+                                                value={newRow.applied_at}
+                                                onChange={(e) =>
+                                                    setNewRow({ ...newRow, applied_at: e.target.value })
+                                                }
+                                                className="w-full bg-transparent border-none outline-none text-sm text-white"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-3 relative">
+                                            <input
+                                                type="text"
+                                                value={newRow.notes}
+                                                onChange={(e) =>
+                                                    setNewRow({ ...newRow, notes: e.target.value })
+                                                }
+                                                placeholder="Notes"
+                                                className="w-full bg-transparent border-none outline-none text-sm text-white placeholder-gray-500 truncate"
+                                            />
+                                        </td>
+                                        {/* Custom Column Inputs */}
+                                        {customColumns.map((col, idx, arr) => (
+                                            <td key={col.id} className="px-4 py-3">
+                                                <input
+                                                    type="text"
+                                                    value={newRow.custom_fields?.[col.id] || ''}
+                                                    onChange={(e) =>
+                                                        setNewRow({
+                                                            ...newRow,
+                                                            custom_fields: {
+                                                                ...newRow.custom_fields,
+                                                                [col.id]: e.target.value
+                                                            }
+                                                        })
+                                                    }
+                                                    placeholder={col.name}
+                                                    className="w-full bg-transparent border-none outline-none text-sm text-white placeholder-gray-500 truncate"
+                                                />
+                                            </td>
+                                        ))}
+                                        <td className="px-4 py-3 flex gap-2 items-center relative">
+                                            <button
+                                                onClick={handleSaveNew}
+                                                className="text-xs bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded transition-colors"
+                                            >
+                                                Save
+                                            </button>
+                                            <button
+                                                onClick={() => setShowNewRow(false)}
+                                                className="text-gray-400 hover:text-red-400 p-1 rounded transition-colors"
+                                                title="Discard draft entry"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             ) : (
                 <div className="rounded-lg border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-8">
