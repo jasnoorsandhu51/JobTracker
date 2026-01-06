@@ -1,3 +1,4 @@
+"use client";
 
 import { signup } from './actions'
 import Link from 'next/link'
